@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>森之息 - 瑞祥高中空氣品質專題研究</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ghibli-sky: #1a2a6c;
+            --ghibli-grass: #4d7c0f;
+            --ghibli-warm: #fef3c7;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #0f172a, #1e1b4b, #312e81);
+            color: var(--ghibli-warm);
+        }
+
+        /* 吉卜力風背景動畫 */
+        .night-sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            filter: blur(30px);
+            border-radius: 50%;
+            animation: drift var(--duration) linear infinite;
+        }
+
+        @keyframes drift {
+            from { transform: translateX(-20vw); }
+            to { transform: translateX(120vw); }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 0 0 10px white;
+            animation: shoot 5s infinite;
+            opacity: 0;
+        }
+
+        @keyframes shoot {
+            0% { transform: translate(100vw, 0vh) rotate(-45deg); opacity: 1; }
+            10% { transform: translate(70vw, 30vh) rotate(-45deg); opacity: 0; }
+            100% { transform: translate(70vw, 30vh) rotate(-45deg); opacity: 0; }
+        }
+
+        /* 內容樣式 */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .title-ghibli {
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 4rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .btn-ghibli {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #451a03;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #fef3c7;
+            box-shadow: 0 4px 0 #92400e;
+        }
+
+        .btn-ghibli:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #92400e;
+        }
+
+        .btn-ghibli:active {
+            transform: translateY(2px);
+            box-shadow: 0 0px 0 #92400e;
+        }
+
+        .section-tag {
+            background: rgba(251, 191, 36, 0.2);
+            border-left: 4px solid #fbbf24;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1b4b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="night-sky" id="sky">
+        <!-- JS 將動態生成星星與雲朵 -->
+    </div>
+
+    <div class="container mx-auto px-4 py-12 relative z-10">
+        <!-- Header -->
+        <header class="text-center mb-20">
+            <h1 class="title-ghibli text-yellow-400 mb-4">森之息</h1>
+            <p class="text-xl opacity-80 tracking-widest font-light">瑞祥高中空氣品質觀測與環境保護專題報告</p>
+            <div class="mt-8 flex justify-center gap-4">
+                <button onclick="scrollToContent()" class="px-8 py-3 rounded-full border border-white/30 hover:bg-white/10 transition">探索內容</button>
+                <button onclick="downloadProject()" class="btn-ghibli px-8 py-3 rounded-full font-bold">執行專案程式檔</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="max-w-4xl mx-auto space-y-12" id="main-content">
+            
+            <!-- Introduction Section -->
+            <section class="glass-panel p-8 md:p-12">
+                <div class="section-tag mb-4">專題緣起</div>
+                <h2 class="text-3xl font-bold mb-6 text-yellow-100">當風不再清澈：我們的觀察</h2>
+                <div class="prose prose-invert max-w-none text-lg leading-relaxed text-gray-200">
+                    <p class="mb-4">
+                        在吉卜力的動畫中，風往往是生命的媒介，輕拂過草原與森林。然而在現實生活中，工業的煙囪與繁忙的交通正逐漸改寫大氣的成分。本次專案由瑞祥高中學生團隊發起，旨在透過數據監測，理解我們呼吸的每一口氣。
+                    </p>
+                    <p>
+                        空氣品質（AQI）不僅僅是新聞中的一個數字，它關係到校園內每一位師生的健康。我們透過感測器記錄了為期三個月的 PM2.5 與二氧化碳數據，試圖找出南高雄工業區周邊空氣流動的規律。
+                    </p>
+                </div>
+            </section>
+
+            <!-- Grid Info -->
+            <div class="grid md:grid-cols-2 gap-8">
+                <section class="glass-panel p-8">
+                    <h3 class="text-xl font-bold mb-4 text-yellow-300">研究對象</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li>• PM2.5 懸浮微粒分析</li>
+                        <li>• 臭氧 (O3) 濃度變化趨勢</li>
+                        <li>• 二氧化硫 (SO2) 與工業區關聯性</li>
+                        <li>• 校園綠植對空氣過濾之影響</li>
+                    </ul>
+                </section>
+                <section class="glass-panel p-8">
+                    <h3 class="text-xl font-bold mb-4 text-yellow-300">專題成果</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li>• 即時空氣品質可視化地圖</li>
+                        <li>• 污染預警預測模型 (Python)</li>
+                        <li>• 50 頁深度調查分析報告</li>
+                        <li>• 瑞祥校園環保推廣互動網頁</li>
+                    </ul>
+                </section>
+            </div>
+
+            <!-- Conclusion -->
+            <section class="glass-panel p-8 md:p-12 text-center">
+                <h2 class="text-2xl font-bold mb-6">「為了能看見更遠的山脈，我們守護這片天空。」</h2>
+                <p class="text-gray-400 mb-8 italic">—— 瑞祥高中專題小組全體成員 敬上</p>
+                <div class="inline-block p-1 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500">
+                    <button onclick="downloadProject()" class="bg-indigo-950 px-12 py-4 rounded-full font-bold hover:bg-transparent transition text-white">
+                        點擊獲取專案源碼與執行檔
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 text-center text-white/40 text-sm pb-10">
+            <p>© 2024 高中環境科學專題研究小組 - 高雄市立瑞祥高級中學</p>
+            <p>設計風格參考：Studio Ghibli Aesthetic</p>
+        </footer>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-10 right-10 transform translate-y-20 opacity-0 transition-all duration-500 bg-yellow-500 text-black px-6 py-3 rounded-lg shadow-2xl font-bold z-50">
+        專案執行檔正在準備下載...
+    </div>
+
+    <script>
+        // 初始化夜晚背景
+        function initSky() {
+            const sky = document.getElementById('sky');
+            const starCount = 150;
+            const cloudCount = 6;
+
+            // 生成星星
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${2 + Math.random() * 4}s`);
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                sky.appendChild(star);
+            }
+
+            // 生成雲朵
+            for (let i = 0; i < cloudCount; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                const size = 200 + Math.random() * 300;
+                cloud.style.width = `${size}px`;
+                cloud.style.height = `${size * 0.6}px`;
+                cloud.style.top = `${Math.random() * 80}%`;
+                cloud.style.setProperty('--duration', `${30 + Math.random() * 60}s`);
+                cloud.style.animationDelay = `-${Math.random() * 60}s`;
+                sky.appendChild(cloud);
+            }
+
+            // 生成隨機流星
+            setInterval(() => {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.top = `${Math.random() * 40}%`;
+                sky.appendChild(shootingStar);
+                setTimeout(() => shootingStar.remove(), 5000);
+            }, 8000);
+        }
+
+        function scrollToContent() {
+            document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadProject() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+
+            // 這裡可以導向實際的 GitHub 或 雲端硬碟連結
+            console.log("正在觸發下載流程...");
+        }
+
+        window.onload = initSky;
+    </script>
+</body>
+</html>
